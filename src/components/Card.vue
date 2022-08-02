@@ -1,4 +1,4 @@
 <template>
-    <div>{{ symbols }}</div>
+    <div>{{ symbol }}</div>
     <div>{{ name }}</div>
 </template>
