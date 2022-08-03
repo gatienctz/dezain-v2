@@ -9,6 +9,9 @@
           <v-btn-toggle mandatory multiple v-model="selectedOptions">
             <v-btn x-small v-for="opt in optionsMap" :value="opt.type" :key="opt.type"> {{ opt.name }}</v-btn>
           </v-btn-toggle>
+          <v-btn-toggle mandatory multiple v-model="selectedTypeGuess">
+            <v-btn x-small v-for="t in typeGuessMap" :value="t.type" :key="t.type"> {{ t.name }}</v-btn>
+          </v-btn-toggle>
           <v-btn @click="getGuesses">Randomize</v-btn>
         </v-toolbar-items>
       </v-toolbar>
@@ -16,13 +19,13 @@
         <v-spacer>Symbole à trouver</v-spacer>
         <v-row :align="center">
           <v-col>
-            <kanaItem v-if="solution" :name="solution.roumaji" :symbol="solution.kana"></kanaItem>
+            <kanaItem v-if="solution" :isSymbol="solution.displayType" :name="solution.roumaji" :symbol="solution.kana"></kanaItem>
           </v-col>
         </v-row>
         <v-spacer>Choix</v-spacer>
         <v-row :align="center">
           <v-col v-for="guess in guesses" :key="guess.roumaji">
-            <kanaItem :name="guess.roumaji" :symbol="guess.kana"></kanaItem>
+            <kanaItem v-if="solution" :name="guess.roumaji" :isSymbol="!solution.displayType" :symbol="guess.kana"></kanaItem>
           </v-col>
         </v-row>
       </v-container>
@@ -55,6 +58,14 @@ export default {
       { name: "Hiragana", alphabet: require('./resource/js/hiragana.json') },
     ];
 
+    const typeGuessMap = [
+      {name:"Symbole", type: 'kana'},
+      {name:"Roumaji", type: 'roumaji'}
+    ]
+
+    var isSymbol = true;
+
+    const selectedTypeGuess = ref();
     const selectedAlphabet = ref();
     const selectedOptions = ref();
 
@@ -70,14 +81,19 @@ export default {
       console.log("Solution : " + solution.value);
       guesses.value = getRandomAnswers(alphabet, solution.value, 5);
       console.log("Guesses : " + guesses.value);
+      isSymbol = isSymbolDisplay(selectedTypeGuess.value);
+      console.log("Is Symbol : " + isSymbol);
+      solution.value.displayType = isSymbol;
     }
 
     const setupAlphabet = (selectedAlphabet, selectedOptions) => {
       var retAlphabet = null;
-      console.log(selectedAlphabet);
       retAlphabet = selectedAlphabet.flat();
-      console.log(retAlphabet);
       return retAlphabet.filter(item => selectedOptions.includes(item.type));
+    }
+
+    const isSymbolDisplay = (types) => {
+      return types[randomIndex(types)] === 'kana';
     }
 
     const randomIndex = (array) => {
@@ -98,6 +114,7 @@ export default {
     const getRandomAnswers = (array, solution, possibleAnswer = 3) => {
       const answers = [solution];
       possibleAnswer--;
+      //Get random answers
       for (let i = 0; i < possibleAnswer; i++) {
         var item;
         do {
@@ -116,14 +133,18 @@ export default {
       console.log("Selected Alphabet : " + selectedAlphabet.value);
       selectedOptions.value = [optionsMap[0].type];
       console.log("Selected Options : " + selectedOptions.value);
+      selectedTypeGuess.value = [typeGuessMap[0].type];
+      console.log("Selected Options : " + selectedOptions.value);
       getGuesses();
     })
 
     return {
       optionsMap,
       alphabetsMap,
+      typeGuessMap,
       selectedAlphabet,
       selectedOptions,
+      selectedTypeGuess,
       setupAlphabet,
       getRandomAnswers,
       getRandomItem,
