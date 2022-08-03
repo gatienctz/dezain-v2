@@ -4,7 +4,9 @@
       <v-toolbar dense elevation="2">
         <v-toolbar-items>
           <v-btn-toggle mandatory multiple v-model="selectedAlphabet">
-            <v-btn x-small v-for="alphabet in alphabetsMap" :value="alphabet.alphabet" :key="alphabet.name"> {{ alphabet.name }}</v-btn>
+            <v-btn x-small v-for="alphabet in alphabetsMap" :value="alphabet.alphabet" :key="alphabet.name"> {{
+                alphabet.name
+            }}</v-btn>
           </v-btn-toggle>
           <v-btn-toggle mandatory multiple v-model="selectedOptions">
             <v-btn x-small v-for="opt in optionsMap" :value="opt.type" :key="opt.type"> {{ opt.name }}</v-btn>
@@ -19,13 +21,13 @@
         <v-spacer>Symbole à trouver</v-spacer>
         <v-row :align="center">
           <v-col>
-            <kanaItem v-if="solution" :isSymbol="solution.displayType" :name="solution.roumaji" :symbol="solution.kana"></kanaItem>
+            <KanaItem v-if="solution" :isSymbol="solution.displayType" :item="solution"></KanaItem>
           </v-col>
         </v-row>
         <v-spacer>Choix</v-spacer>
         <v-row :align="center">
           <v-col v-for="guess in guesses" :key="guess.roumaji">
-            <kanaItem v-if="solution" :name="guess.roumaji" :isSymbol="!solution.displayType" :symbol="guess.kana"></kanaItem>
+            <KanaItem v-if="solution" :item="guess" :isSymbol="!solution.displayType"></KanaItem>
           </v-col>
         </v-row>
       </v-container>
@@ -35,33 +37,55 @@
 
 <script>
 import { ref, onMounted } from 'vue'
-//import HelloWorld from './components/HelloWorld.vue'
-import kanaItem from './components/kana-item.vue'
+import KanaItem from './components/KanaItem.vue'
 import katakana from './resource/js/katakana.json'
 import hiragana from './resource/js/hiragana.json'
 
 export default {
   name: 'App',
   components: {
-    kanaItem
+    KanaItem
   },
   setup() {
 
-    const optionsMap = [
+    const alphabetOptions = {
+      title: "Versions",
+      options : [
       { name: 'Handakuten', type: 'handakuon' },
       { name: 'Dakuten', type: 'dakuon' },
       { name: 'Gojūon', type: 'gojuuon' },
       { name: 'Yōon', type: 'youon' }
     ]
-    const alphabetsMap = [
-      { name: "Katakana", alphabet: require('./resource/js/katakana.json') },
-      { name: "Hiragana", alphabet: require('./resource/js/hiragana.json') },
-    ];
+  }
 
-    const typeGuessMap = [
-      {name:"Symbole", type: 'kana'},
-      {name:"Roumaji", type: 'roumaji'}
-    ]
+    const typeOptions = {
+      title: "Types",
+      options: [
+        { name: "Symbole", type: 'kana' },
+        { name: "Roumaji", type: 'roumaji' }
+      ]
+    }
+
+    const katakanaModel = {
+      name: "Katakana",
+      selectedAlphabetOptions: ref([]),
+      selectedTypes: ref([]),
+      json: require('./resource/js/katakana.json'),
+      scoreboard: {
+        rightAnswers: ref(0),
+        wrongAnswers: ref(0)
+      }
+    };
+    const hiraganaModel = {
+      name: "Hiragana",
+      selectedAlphabetOptions: ref([]),
+      selectedTypes: ref([]),
+      json: require('./resource/js/hiragana.json'),
+      scoreboard: {
+        rightAnswers: ref(0),
+        wrongAnswers: ref(0)
+      }
+    };
 
     var isSymbol = true;
 
@@ -73,22 +97,28 @@ export default {
     const solution = ref();
     const guesses = ref();
 
+    //TODO Do Computed object for Total & pourcent for each entry of scoreboardModel 
+
+    /*const verifyAnswer = (item) => {
+      item.roumaji === solution.value.roumaji ? rightAnswer++ : wrongAnswer++;
+    }*/
+
     const getGuesses = () => {
-      console.log("Get Guesses called");
+
       alphabet = setupAlphabet(selectedAlphabet.value, selectedOptions.value);
-      console.log("Alphabet : " + alphabet)
+
       solution.value = getRandomItem(alphabet);
-      console.log("Solution : " + solution.value);
+
       guesses.value = getRandomAnswers(alphabet, solution.value, 5);
-      console.log("Guesses : " + guesses.value);
+
       isSymbol = isSymbolDisplay(selectedTypeGuess.value);
-      console.log("Is Symbol : " + isSymbol);
+
       solution.value.displayType = isSymbol;
     }
 
     const setupAlphabet = (selectedAlphabet, selectedOptions) => {
       var retAlphabet = null;
-      retAlphabet = selectedAlphabet.flat();
+      retAlphabet = selectedAlphabet[randomIndex(selectedAlphabet)];
       return retAlphabet.filter(item => selectedOptions.includes(item.type));
     }
 
@@ -154,7 +184,8 @@ export default {
       alphabet,
       solution,
       guesses,
-      getGuesses
+      getGuesses,
+      scoreboardModel
     }
   }
 }
