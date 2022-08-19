@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <v-toolbar dense elevation="2">
+      <!-- <v-toolbar dense elevation="2">
         <v-toolbar-items>
           <v-btn-toggle mandatory multiple v-model="selectedAlphabet">
             <v-btn x-small v-for="alphabet in alphabetsMap" :value="alphabet.alphabet" :key="alphabet.name"> {{
@@ -16,8 +16,18 @@
           </v-btn-toggle>
           <v-btn @click="getGuesses">Randomize</v-btn>
         </v-toolbar-items>
-      </v-toolbar>
+      </v-toolbar> -->
       <v-container>
+        <v-row>
+          <v-col>
+            <AlphabetOptionsTab :model="hiraganaModel" :versionOptions="versionOptions" :typeOptions="typeOptions"/>
+          </v-col>
+          <v-col>
+            <AlphabetOptionsTab :model="katakanaModel" :versionOptions="versionOptions" :typeOptions="typeOptions"/>
+          </v-col>
+        </v-row>
+      </v-container>
+      <!--<v-container>
         <v-spacer>Symbole à trouver</v-spacer>
         <v-row :align="center">
           <v-col>
@@ -30,33 +40,33 @@
             <KanaItem v-if="solution" :item="guess" :isSymbol="!solution.displayType"></KanaItem>
           </v-col>
         </v-row>
-      </v-container>
+      </v-container>-->
     </v-main>
   </v-app>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue'
-import KanaItem from './components/KanaItem.vue'
-import katakana from './resource/js/katakana.json'
-import hiragana from './resource/js/hiragana.json'
+//import KanaItem from './components/KanaItem.vue'
+import AlphabetOptionsTab from './components/AlphabetOptionsTab.vue'
 
 export default {
   name: 'App',
   components: {
-    KanaItem
+    //KanaItem,
+    AlphabetOptionsTab
   },
   setup() {
 
-    const alphabetOptions = {
+    const versionOptions = {
       title: "Versions",
-      options : [
-      { name: 'Handakuten', type: 'handakuon' },
-      { name: 'Dakuten', type: 'dakuon' },
-      { name: 'Gojūon', type: 'gojuuon' },
-      { name: 'Yōon', type: 'youon' }
-    ]
-  }
+      options: [
+        { name: 'Handakuten', type: 'handakuon' },
+        { name: 'Dakuten', type: 'dakuon' },
+        { name: 'Gojūon', type: 'gojuuon' },
+        { name: 'Yōon', type: 'youon' }
+      ]
+    }
 
     const typeOptions = {
       title: "Types",
@@ -68,7 +78,7 @@ export default {
 
     const katakanaModel = {
       name: "Katakana",
-      selectedAlphabetOptions: ref([]),
+      selectedVersions: ref([]),
       selectedTypes: ref([]),
       json: require('./resource/js/katakana.json'),
       scoreboard: {
@@ -76,9 +86,10 @@ export default {
         wrongAnswers: ref(0)
       }
     };
+    
     const hiraganaModel = {
       name: "Hiragana",
-      selectedAlphabetOptions: ref([]),
+      selectedVersions: ref([]),
       selectedTypes: ref([]),
       json: require('./resource/js/hiragana.json'),
       scoreboard: {
@@ -87,22 +98,15 @@ export default {
       }
     };
 
-    var isSymbol = true;
+    //var isSymbol = true;
 
-    const selectedTypeGuess = ref();
-    const selectedAlphabet = ref();
-    const selectedOptions = ref();
-
-    let alphabet;
-    const solution = ref();
-    const guesses = ref();
 
     //TODO Do Computed object for Total & pourcent for each entry of scoreboardModel 
 
     /*const verifyAnswer = (item) => {
       item.roumaji === solution.value.roumaji ? rightAnswer++ : wrongAnswer++;
     }*/
-
+    /*
     const getGuesses = () => {
 
       alphabet = setupAlphabet(selectedAlphabet.value, selectedOptions.value);
@@ -120,7 +124,7 @@ export default {
       var retAlphabet = null;
       retAlphabet = selectedAlphabet[randomIndex(selectedAlphabet)];
       return retAlphabet.filter(item => selectedOptions.includes(item.type));
-    }
+    }*/
 
     const isSymbolDisplay = (types) => {
       return types[randomIndex(types)] === 'kana';
@@ -159,33 +163,22 @@ export default {
 
     onMounted(() => {
       console.log("OnMounted -- Init :");
-      selectedAlphabet.value = [alphabetsMap[0].alphabet];
-      console.log("Selected Alphabet : " + selectedAlphabet.value);
-      selectedOptions.value = [optionsMap[0].type];
-      console.log("Selected Options : " + selectedOptions.value);
-      selectedTypeGuess.value = [typeGuessMap[0].type];
-      console.log("Selected Options : " + selectedOptions.value);
-      getGuesses();
+      //selectedAlphabet.value = [alphabetsMap[0].alphabet];
+      //selectedOptions.value = [optionsMap[0].type];
+      //selectedTypeGuess.value = [typeGuessMap[0].type];
+      //getGuesses();
     })
 
     return {
-      optionsMap,
-      alphabetsMap,
-      typeGuessMap,
-      selectedAlphabet,
-      selectedOptions,
-      selectedTypeGuess,
-      setupAlphabet,
+      versionOptions,
+      typeOptions,
+      katakanaModel,
+      hiraganaModel,
       getRandomAnswers,
       getRandomItem,
       randomIndex,
-      katakana,
-      hiragana,
-      alphabet,
-      solution,
-      guesses,
-      getGuesses,
-      scoreboardModel
+      shuffleArray,
+      isSymbolDisplay
     }
   }
 }
