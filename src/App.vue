@@ -20,10 +20,8 @@
       <v-container>
         <v-row>
           <v-col>
-            <AlphabetOptionsTab :model="hiraganaModel" :versionOptions="versionOptions" :typeOptions="typeOptions"/>
-          </v-col>
-          <v-col>
-            <AlphabetOptionsTab :model="katakanaModel" :versionOptions="versionOptions" :typeOptions="typeOptions"/>
+            <AlphabetOptionsTab :objectName="'hiraganaModel'" :versionOptions="versionOptions" :typeOptions="typeOptions"/>
+            <AlphabetOptionsTab :objectName="'katakanaModel'" :versionOptions="versionOptions" :typeOptions="typeOptions"/>
           </v-col>
         </v-row>
       </v-container>
@@ -46,9 +44,11 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
+import { useStore } from '@/stores/store.js'
 //import KanaItem from './components/KanaItem.vue'
-import AlphabetOptionsTab from './components/AlphabetOptionsTab.vue'
+import AlphabetOptionsTab from '@/components/AlphabetOptionsTab.vue'
+import { storeToRefs } from 'pinia';
 
 export default {
   name: 'App',
@@ -57,6 +57,9 @@ export default {
     AlphabetOptionsTab
   },
   setup() {
+
+    const store = useStore();
+    const { katakanaModel, hiraganaModel } = storeToRefs(store);
 
     const versionOptions = {
       title: "Versions",
@@ -75,28 +78,6 @@ export default {
         { name: "Roumaji", type: 'roumaji' }
       ]
     }
-
-    const katakanaModel = {
-      name: "Katakana",
-      selectedVersions: ref([]),
-      selectedTypes: ref([]),
-      json: require('./resource/js/katakana.json'),
-      scoreboard: {
-        rightAnswers: ref(0),
-        wrongAnswers: ref(0)
-      }
-    };
-    
-    const hiraganaModel = {
-      name: "Hiragana",
-      selectedVersions: ref([]),
-      selectedTypes: ref([]),
-      json: require('./resource/js/hiragana.json'),
-      scoreboard: {
-        rightAnswers: ref(0),
-        wrongAnswers: ref(0)
-      }
-    };
 
     //var isSymbol = true;
 
@@ -162,7 +143,6 @@ export default {
     }
 
     onMounted(() => {
-      console.log("OnMounted -- Init :");
       //selectedAlphabet.value = [alphabetsMap[0].alphabet];
       //selectedOptions.value = [optionsMap[0].type];
       //selectedTypeGuess.value = [typeGuessMap[0].type];
@@ -172,13 +152,13 @@ export default {
     return {
       versionOptions,
       typeOptions,
-      katakanaModel,
-      hiraganaModel,
       getRandomAnswers,
       getRandomItem,
       randomIndex,
       shuffleArray,
-      isSymbolDisplay
+      isSymbolDisplay,
+      katakanaModel,
+      hiraganaModel
     }
   }
 }
