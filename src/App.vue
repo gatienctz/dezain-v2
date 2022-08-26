@@ -1,5 +1,13 @@
 <template>
   <v-app>
+    <v-header>
+      Mon header
+    </v-header>
+    <v-card>
+      <v-navigation-drawer location="left" rail>
+
+      </v-navigation-drawer>
+    </v-card>
     <v-main>
       <!-- <v-toolbar dense elevation="2">
         <v-toolbar-items>
@@ -17,11 +25,17 @@
           <v-btn @click="getGuesses">Randomize</v-btn>
         </v-toolbar-items>
       </v-toolbar> -->
-      <v-container>
+      <v-container fluid>
         <v-row>
-          <v-col>
+          <v-col cols="1.5">
             <AlphabetOptionsTab :objectName="'hiraganaModel'" :versionOptions="versionOptions" :typeOptions="typeOptions"/>
             <AlphabetOptionsTab :objectName="'katakanaModel'" :versionOptions="versionOptions" :typeOptions="typeOptions"/>
+          </v-col>
+          <v-col cols="9">
+          </v-col>
+          <v-col cols="1.5">
+            <p>Versions : {{ hiraganaModel.selectedVersions }}</p>
+            <p>Types : {{ hiraganaModel.selectedTypes }}</p>
           </v-col>
         </v-row>
       </v-container>

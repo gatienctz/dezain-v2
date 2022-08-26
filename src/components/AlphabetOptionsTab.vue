@@ -1,24 +1,24 @@
 <template>
-    <v-card>
+    <v-container class="pa-0 mx-auto">
         <v-toolbar color="white" flat>
             <v-toolbar-title>
                 {{ store[objectName].name }}
             </v-toolbar-title>
         </v-toolbar>
-        <v-container>
-            <v-subheader>{{ versionOptions.title }}</v-subheader>
-            <v-divider></v-divider>
-            <v-checkbox v-model="selectedVersions" class="pa-1 d-block-flex" v-for="v in versionOptions.options"
-                :input-value="true" :key="v.type" :value="v.type" hide-details color="info" :label="v.name">
-            </v-checkbox>
-            <v-subheader>{{ typeOptions.title }}</v-subheader>
-            <v-divider></v-divider>
-            <v-checkbox v-model="selectedTypes" class="pa-1 d-block-flex" v-for="t in typeOptions.options" :key="t.type"
-                :input-value="true" :value="t.type" hide-details color="info" :label="t.name">
-            </v-checkbox>
-            <!-- <v-checkbox v-for="t in typeOptions.options" @input="overrideModelValue()" :key="t.type" :value="t.type" hide-details :color="info" :input-value="isSelected(t.type)" :label="t.name"></v-checkbox> -->
+        <v-container class="pa-0 mx-auto">
+            <v-list nav density="compact"  :lines="false" class="pa-0" mandatory select-strategy="multiple">
+                <v-list-item v-model="selectedVersions" v-for="v in versionOptions.options" :key="v.type" :value="v.type">
+                    <v-list-item-title start>{{ v.name }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
+            <v-list nav density="compact" :lines="false" class="pa-0" mandatory select-strategy="multiple">
+                <v-list-title>{{ typeOptions.title }}</v-list-title>
+                <v-list-item v-for="t in typeOptions.options" :key="t.type" v-model="selectedTypes" :value="t.type">
+                    <v-list-item-title start>{{ t.name }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
         </v-container>
-    </v-card>
+    </v-container>
 </template>
 
 <script>
@@ -48,13 +48,14 @@ export default {
                 return store[props.objectName].selectedTypes;
             },
             set(newValue) {
+                console.log(store[props.objectName].selectedTypes, newValue);
                 store[props.objectName].selectedTypes = newValue;
             }
         })
 
         onMounted(() => {
-            store[props.objectName].selectedTypes.push(props.typeOptions.options[0].type);
-            store[props.objectName].selectedVersions.push(props.versionOptions.options[0].type);
+            store[props.objectName].selectedTypes = [props.typeOptions.options[0].type];
+            store[props.objectName].selectedVersions = [props.versionOptions.options[0].type];
         })
 
         return {
