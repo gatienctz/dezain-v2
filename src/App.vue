@@ -1,44 +1,42 @@
 <template>
   <v-app>
-    <v-header>
-      Mon header
-    </v-header>
-    <v-card>
-      <v-navigation-drawer location="left" rail>
+    <v-navigation-drawer :style="'border: solid grey 1px;'" location="left" rail>
 
-      </v-navigation-drawer>
-    </v-card>
-    <v-main>
-      <!-- <v-toolbar dense elevation="2">
-        <v-toolbar-items>
-          <v-btn-toggle mandatory multiple v-model="selectedAlphabet">
-            <v-btn x-small v-for="alphabet in alphabetsMap" :value="alphabet.alphabet" :key="alphabet.name"> {{
-                alphabet.name
-            }}</v-btn>
-          </v-btn-toggle>
-          <v-btn-toggle mandatory multiple v-model="selectedOptions">
-            <v-btn x-small v-for="opt in optionsMap" :value="opt.type" :key="opt.type"> {{ opt.name }}</v-btn>
-          </v-btn-toggle>
-          <v-btn-toggle mandatory multiple v-model="selectedTypeGuess">
-            <v-btn x-small v-for="t in typeGuessMap" :value="t.type" :key="t.type"> {{ t.name }}</v-btn>
-          </v-btn-toggle>
-          <v-btn @click="getGuesses">Randomize</v-btn>
-        </v-toolbar-items>
-      </v-toolbar> -->
-      <v-container fluid>
-        <v-row>
-          <v-col cols="1.5">
-            <AlphabetOptionsTab :objectName="'hiraganaModel'" :versionOptions="versionOptions" :typeOptions="typeOptions"/>
-            <AlphabetOptionsTab :objectName="'katakanaModel'" :versionOptions="versionOptions" :typeOptions="typeOptions"/>
+    </v-navigation-drawer>
+    <v-main class="fill-height">
+      <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
+        <v-row class="fill-height">
+          <v-col :style="'border: solid grey 1px;'" cols="1.5">
+            <AlphabetOptionsTab :objectName="'hiraganaModel'" :versionOptions="versionOptions"
+              :typeOptions="typeOptions" />
+            <AlphabetOptionsTab :objectName="'katakanaModel'" :versionOptions="versionOptions"
+              :typeOptions="typeOptions" />
           </v-col>
-          <v-col cols="9">
+          <v-col :style="'border: solid grey 1px;'" cols="9">
+            <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
+                <v-container :style="'border: solid grey 1px;'" class="pa-1 align-self-start h-50">
+                <v-row class="justify-center pa-2 ma-0">
+<KanaItem :value="'い'"></KanaItem>
+                </v-row>
+                </v-container>
+                <v-container :style="'border: solid grey 1px;'" class="pa-1 align-self-end h-50">
+                <v-row class="justify-center pa-2 ma-0">
+<KanaItem :value="'い'"></KanaItem>
+<KanaItem :value="'え'"></KanaItem>
+<KanaItem :value="'て'"></KanaItem>
+                </v-row>
+                </v-container>
+            </v-container>
           </v-col>
-          <v-col cols="1.5">
+          <v-col :style="'border: solid grey 1px;'" cols="1.5">
             <p>Versions : {{ hiraganaModel.selectedVersions }}</p>
             <p>Types : {{ hiraganaModel.selectedTypes }}</p>
           </v-col>
         </v-row>
       </v-container>
+      <v-footer fixed :style="'border: solid grey 1px;'">
+      <p>My footer</p>
+      </v-footer>
       <!--<v-container>
         <v-spacer>Symbole à trouver</v-spacer>
         <v-row :align="center">
@@ -60,14 +58,14 @@
 <script>
 import { onMounted } from 'vue'
 import { useStore } from '@/stores/store.js'
-//import KanaItem from './components/KanaItem.vue'
+import KanaItem from './components/KanaItem.vue'
 import AlphabetOptionsTab from '@/components/AlphabetOptionsTab.vue'
 import { storeToRefs } from 'pinia';
 
 export default {
   name: 'App',
   components: {
-    //KanaItem,
+    KanaItem,
     AlphabetOptionsTab
   },
   setup() {
@@ -181,10 +179,6 @@ export default {
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
