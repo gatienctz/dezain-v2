@@ -1,19 +1,20 @@
 <template>
     <v-container class="pa-0" fluid>
         <v-toolbar color="white" flat>
+            {{selectedTypeOptions}}
             <v-toolbar-title>
-                {{ store[objectName].name }}
+                {{ versionName }}
             </v-toolbar-title>
         </v-toolbar>
         <v-container class="pa-0" fluid>
             <v-list nav density="compact" :lines="false" class="pa-0" mandatory select-strategy="multiple">
-                <v-list-item v-model="store[objectName].selectedVersions" v-for="v in versionOptions.options" :key="v.type" :value="v.type">
+                <v-list-item v-for="v in versionOptions.options" :item="v" :key="v.type" :value="v.type" :active="isActiveVersion(v.type)" @click="toggleOptionVersion(v.type)">
                     <v-list-item-title start>{{ v.name }}</v-list-item-title>
                 </v-list-item>
             </v-list>
             <v-list nav density="compact" :lines="false" class="pa-0" mandatory select-strategy="multiple">
-                <v-list-title>{{ typeOptions.title }}</v-list-title>
-                <v-list-item v-for="t in typeOptions.options" :key="t.type" v-model="store[objectName].selectedTypes" :value="t.type">
+                <v-list-subheader>{{ typeOptions.title }}</v-list-subheader>
+                <v-list-item v-for="t in typeOptions.options" :key="t.type" :value="t.type" :active="isActiveType(t.type)" @click="toggleOptionType(t.type)">
                     <v-list-item-title start>{{ t.name }}</v-list-item-title>
                 </v-list-item>
             </v-list>
@@ -22,46 +23,47 @@
 </template>
 
 <script>
-
-import { useStore } from '@/store'
-import { onMounted } from 'vue'
+import { computed } from 'vue-demi'
 
 export default {
     props: {
+        versionName: {
+            type: String,
+            required: true
+        },
         versionOptions: { type: Object, default: null },
         typeOptions: { type: Object, default: null },
+        selectedVersionOptions: { type: Array, default: () => [] },
+        selectedTypeOptions: { type: Array, default: () => [] },
         objectName: { type: String, default: null }
     },
-    setup(props) {
-        const store = useStore();
-
-        /*const selectedVersions = computed({
-            get() {
-                return store[props.objectName].selectedVersions;
-            },
-            set(newValue) {
-                store[props.objectName].selectedVersions = newValue;
-            }
-        })
-        const selectedTypes = computed({
-            get() {
-                return store[props.objectName].selectedTypes;
-            },
-            set(newValue) {
-                console.log(store[props.objectName].selectedTypes, newValue);
-                store[props.objectName].selectedTypes = newValue;
-            }
-        })*/
-
-        onMounted(() => {
-            store[props.objectName].selectedTypes = [props.typeOptions.options[0].type];
-            store[props.objectName].selectedVersions = [props.versionOptions.options[0].type];
-        })
-
+    emits: ['update:selectedVersions', 'update:selectedTypes'],
+    setup(props, { emit }) {
+        const isActiveVersion = computed(() => version =>  props.selectedVersionOptions.includes(version))
+        const isActiveType = computed(() => type =>  props.selectedTypeOptions.includes(type))
+        const toggleOptionVersion = version => {
+            if (props.selectedVersionOptions.includes(version)) {
+                    emit('update:selectedVersions', props.selectedVersionOptions.filter(v => v !== version))
+                } else {
+                    emit('update:selectedVersions', [...props.selectedVersionOptions, version])
+                }
+        }
+        const toggleOptionType = type => {
+            if (props.selectedTypeOptions.includes(type)) {
+                    emit('update:selectedTypes', props.selectedTypeOptions.filter(t => t !== type))
+                    console.log('emit remove')
+                } else {
+                    emit('update:selectedTypes', [...props.selectedTypeOptions, type])
+                    console.log('emit append')
+                }
+        }
         return {
-            //selectedTypes,
-            //selectedVersions,
-            store
+            emit,
+            isActiveVersion,
+            isActiveType,
+            toggleOptionVersion,
+            toggleOptionType,
+            
         }
     }
 }

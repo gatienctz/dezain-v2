@@ -7,9 +7,12 @@
       <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
         <v-row class="fill-height">
           <v-col :style="'border: solid grey 1px;'" cols="1.5">
-            <AlphabetOptionsTab :objectName="'hiraganaModel'" :versionOptions="versionOptions"
-              :typeOptions="typeOptions" />
-            <AlphabetOptionsTab :objectName="'katakanaModel'" :versionOptions="versionOptions"
+            <AlphabetOptionsTab :versionName="'hiraganaModel'"
+              :version-options="versionOptions"
+              :type-options="typeOptions"
+              :selected-types-options="katakanaModel.selectedTypes"
+              @update:selectedTypes="updateSelectedTypes"/>
+            <AlphabetOptionsTab :versionName="'katakanaModel'" :versionOptions="versionOptions"
               :typeOptions="typeOptions" />
           </v-col>
           <v-col :style="'border: solid grey 1px;'" cols="9">
@@ -91,6 +94,12 @@ export default {
       ]
     }
 
+
+    const updateSelectedTypes = (selectedTypes) => {
+      console.log("updateSelectedTypes", selectedTypes);
+      hiraganaModel.selectedTypes = selectedTypes;
+    }
+
     //var isSymbol = true;
 
 
@@ -161,7 +170,7 @@ export default {
       //getGuesses();
     })
 
-    return {
+    return {store,
       versionOptions,
       typeOptions,
       getRandomAnswers,
@@ -170,7 +179,8 @@ export default {
       shuffleArray,
       isSymbolDisplay,
       katakanaModel,
-      hiraganaModel
+      hiraganaModel,
+      updateSelectedTypes
     }
   }
 }
