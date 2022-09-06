@@ -23,8 +23,8 @@
 
 <script>
 
-import { useStore } from '@/stores/store'
-import { /*computed,*/ onMounted } from 'vue'
+import { useStore } from '@/store'
+import { onMounted } from 'vue'
 
 export default {
     props: {
