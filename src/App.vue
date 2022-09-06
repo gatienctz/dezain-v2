@@ -57,7 +57,7 @@
 
 <script>
 import { onMounted } from 'vue'
-import { useStore } from '@/stores/store.js'
+import { useStore } from '@/store'
 import KanaItem from './components/KanaItem.vue'
 import AlphabetOptionsTab from '@/components/AlphabetOptionsTab.vue'
 import { storeToRefs } from 'pinia';
