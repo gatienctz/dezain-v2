@@ -10,7 +10,7 @@
             <AlphabetOptionsTab :versionName="'hiraganaModel'"
               :version-options="versionOptions"
               :type-options="typeOptions"
-              :selected-types-options="katakanaModel.selectedTypes"
+              :selected-types-options="hiraganaModel.selectedTypes"
               @update:selectedTypes="updateSelectedTypes"/>
             <AlphabetOptionsTab :versionName="'katakanaModel'" :versionOptions="versionOptions"
               :typeOptions="typeOptions" />
@@ -94,10 +94,10 @@ export default {
       ]
     }
 
-
     const updateSelectedTypes = (selectedTypes) => {
       console.log("updateSelectedTypes", selectedTypes);
       hiraganaModel.selectedTypes = selectedTypes;
+      console.log("updateSelectedTypes", hiraganaModel.selectedTypes);
     }
 
     //var isSymbol = true;
@@ -168,6 +168,7 @@ export default {
       //selectedOptions.value = [optionsMap[0].type];
       //selectedTypeGuess.value = [typeGuessMap[0].type];
       //getGuesses();
+      console.log(hiraganaModel);
     })
 
     return {store,
