@@ -7,7 +7,7 @@
           <v-col :style="'border: solid grey 1px;'" cols="1.5">
             <AlphabetOptionsTab v-for="a in alphabets" :key="a.name" :value="a" />
           </v-col>
-          <v-col :style="'border: solid grey 1px;'" cols="9">
+          <v-col :style="'border: solid grey 1px; position: relative;'" cols="9">
             <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
               <v-container :style="'border: solid grey 1px;'" class="pa-1 align-self-start h-50">
                 <v-row class="justify-center pa-2 ma-0">
@@ -22,17 +22,17 @@
                 </v-row>
               </v-container>
             </v-container>
+            <v-overlay contained :model-value="!gameStarted" class="justify-center align-center">
+                <v-btn color="success" @click="launchGame">
+                Commencer la partie !
+              </v-btn>
+            </v-overlay>
           </v-col>
           <v-col v-for="a in alphabets" :key="a.name" :value="a" :style="'border: solid grey 1px;'" cols="1.5">
             <p>Versions : {{ a.selectedVersions }}</p>
             <p>Types : {{ a.selectedTypes }}</p>
           </v-col>
         </v-row>
-        <v-overlay contained :model-value="!gameStarted" class="justify-center align-center">
-            <v-btn color="success" @click="launchGame">
-            Commencer la partie !
-          </v-btn>
-        </v-overlay>
       </v-container>
       <!--<v-container>
         <v-spacer>Symbole à trouver</v-spacer>
@@ -48,7 +48,6 @@
           </v-col>
         </v-row>
       </v-container>-->
-      
     </v-main>
   </v-app>
 </template>

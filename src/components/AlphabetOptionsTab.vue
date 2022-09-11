@@ -24,7 +24,6 @@
                 </v-list>
             </v-list-group>
         </v-list>
-
     </v-container>
 </template>
 

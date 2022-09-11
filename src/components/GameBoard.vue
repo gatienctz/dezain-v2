@@ -18,6 +18,11 @@
                   <KanaItem :value="'て'"></KanaItem>
                 </v-row>
               </v-container>
+              <v-overlay contained relative v-model="gameStarted" >
+                    <v-btn color="success" @click="gameStarted = true">
+                    Commencer la partie !
+                </v-btn>
+                </v-overlay>
             </v-container>
           </v-col>
           <v-col v-for="a in alphabets" :key="a.name" :value="a" :style="'border: solid grey 1px;'" cols="1.5">
@@ -25,11 +30,6 @@
             <p>Types : {{ a.selectedTypes }}</p>
           </v-col>
         </v-row>
-        <v-overlay contained v-model="gameStarted" >
-            <v-btn color="success" @click="gameStarted = true">
-            Commencer la partie !
-          </v-btn>
-        </v-overlay>
       </v-container>
 </template>
 
