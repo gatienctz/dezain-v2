@@ -1,28 +1,26 @@
 <template>
   <v-app>
-    <v-navigation-drawer :style="'border: solid grey 1px;'" location="left" rail>
-
-    </v-navigation-drawer>
+    <v-navigation-drawer :style="'border: solid grey 1px;'" location="left" rail/>
     <v-main class="fill-height">
       <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
         <v-row class="fill-height">
           <v-col :style="'border: solid grey 1px;'" cols="1.5">
-            <AlphabetOptionsTab v-for="a in alphabets" :alphabet="a" :key="a" :value="a"/>
+            <AlphabetOptionsTab v-for="a in alphabets" :alphabet="a" :key="a" :value="a" />
           </v-col>
           <v-col :style="'border: solid grey 1px;'" cols="9">
             <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
-                <v-container :style="'border: solid grey 1px;'" class="pa-1 align-self-start h-50">
+              <v-container :style="'border: solid grey 1px;'" class="pa-1 align-self-start h-50">
                 <v-row class="justify-center pa-2 ma-0">
-<KanaItem :value="'い'"></KanaItem>
+                  <KanaItem :value="'い'"></KanaItem>
                 </v-row>
-                </v-container>
-                <v-container :style="'border: solid grey 1px;'" class="pa-1 align-self-end h-50">
+              </v-container>
+              <v-container :style="'border: solid grey 1px;'" class="pa-1 align-self-end h-50">
                 <v-row class="justify-center pa-2 ma-0">
-<KanaItem :value="'い'"></KanaItem>
-<KanaItem :value="'え'"></KanaItem>
-<KanaItem :value="'て'"></KanaItem>
+                  <KanaItem :value="'い'"></KanaItem>
+                  <KanaItem :value="'え'"></KanaItem>
+                  <KanaItem :value="'て'"></KanaItem>
                 </v-row>
-                </v-container>
+              </v-container>
             </v-container>
           </v-col>
           <v-col v-for="a in alphabets" :key="a" :value="a" :style="'border: solid grey 1px;'" cols="1.5">
@@ -32,7 +30,7 @@
         </v-row>
       </v-container>
       <v-footer fixed :style="'border: solid grey 1px;'">
-      <p>My footer</p>
+        <p>My footer</p>
       </v-footer>
       <!--<v-container>
         <v-spacer>Symbole à trouver</v-spacer>
@@ -52,20 +50,22 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
 import { onMounted } from 'vue'
-import { alphabets } from '@/models/alphabet.ts'
+import { useAlphabets } from './store'
 import KanaItem from './components/KanaItem.vue'
-import AlphabetOptionsTab from '@/components/AlphabetOptionsTab.vue'
+import AlphabetOptionsTab from './components/AlphabetOptionsTab.vue'
 
-export default {
+
+
+export default{
   name: 'App',
   components: {
     KanaItem,
     AlphabetOptionsTab
-},
+  },
   setup() {
-
+    const alphabets = useAlphabets();
     //var isSymbol = true;
 
 
@@ -151,6 +151,10 @@ export default {
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
   color: #2c3e50;
+  margin-top: 60px;
 }
 </style>

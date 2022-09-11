@@ -5,15 +5,13 @@ export class Alphabet {
     private readonly letters: Letter[];
     private selectedVersions: string[] = [];
     private selectedTypes: string[] = [];
-    private rightAnswers: number;
-    private wrongAnswers: number;
+    private rightAnswers: number = 0;
+    private wrongAnswers: number = 0;
     
-    constructor(name: string, letters: Letter[], rightAnswers: number, wrongAnswers: number) 
+    constructor(name: string, letters: Letter[]) 
     {
         this.name = name;
         this.letters = letters;
-        this.rightAnswers = rightAnswers;
-        this.wrongAnswers = wrongAnswers;
     }
 }
 
