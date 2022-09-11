@@ -1,12 +1,13 @@
 import { Letter } from '@/models/letter';
 
 export class Alphabet {
-    private readonly name: string;
-    private readonly letters: Letter[];
-    private selectedVersions: string[] = [];
-    private selectedTypes: string[] = [];
-    private rightAnswers: number = 0;
-    private wrongAnswers: number = 0;
+
+    public readonly name: string;
+    public readonly letters: Letter[];
+    public selectedVersions: string[] = [];
+    public selectedTypes: string[] = [];
+    public rightAnswers: number = 0;
+    public wrongAnswers: number = 0;
     
     constructor(name: string, letters: Letter[]) 
     {

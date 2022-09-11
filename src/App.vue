@@ -5,7 +5,7 @@
       <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
         <v-row class="fill-height">
           <v-col :style="'border: solid grey 1px;'" cols="1.5">
-            <AlphabetOptionsTab v-for="a in alphabets" :alphabet="a" :key="a" :value="a" />
+            <AlphabetOptionsTab v-for="a in alphabets" v-model:selected-types="a.selectedTypes" v-model:selected-versions="a.selectedVersions" :key="a.name" :value="a" />
           </v-col>
           <v-col :style="'border: solid grey 1px;'" cols="9">
             <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
@@ -23,15 +23,12 @@
               </v-container>
             </v-container>
           </v-col>
-          <v-col v-for="a in alphabets" :key="a" :value="a" :style="'border: solid grey 1px;'" cols="1.5">
+          <v-col v-for="a in alphabets" :key="a.name" :value="a" :style="'border: solid grey 1px;'" cols="1.5">
             <p>Versions : {{ a.selectedVersions }}</p>
             <p>Types : {{ a.selectedTypes }}</p>
           </v-col>
         </v-row>
       </v-container>
-      <v-footer fixed :style="'border: solid grey 1px;'">
-        <p>My footer</p>
-      </v-footer>
       <!--<v-container>
         <v-spacer>Symbole à trouver</v-spacer>
         <v-row :align="center">
@@ -51,19 +48,18 @@
 </template>
 
 <script lang="ts">
-import { onMounted } from 'vue'
-import { useAlphabets } from './store'
-import KanaItem from './components/KanaItem.vue'
-import AlphabetOptionsTab from './components/AlphabetOptionsTab.vue'
+  
+import { defineComponent, onMounted } from 'vue'
+import { useAlphabets } from '@/store'
+import KanaItem from '@/components/KanaItem.vue'
+import AlphabetOptionsTab from '@/components/AlphabetOptionsTab.vue'
 
-
-
-export default{
+export default defineComponent({
   name: 'App',
   components: {
     KanaItem,
     AlphabetOptionsTab
-  },
+},
   setup() {
     const alphabets = useAlphabets();
     //var isSymbol = true;
@@ -94,27 +90,27 @@ export default{
       return retAlphabet.filter(item => selectedOptions.includes(item.type));
     }*/
 
-    const isSymbolDisplay = (types) => {
+    const isSymbolDisplay = (types: []) => {
       return types[randomIndex(types)] === 'kana';
     }
 
-    const randomIndex = (array) => {
+    const randomIndex = (array: []) => {
       return Math.floor(Math.random() * array.length);
     }
 
-    const getRandomItem = (array) => {
+    const getRandomItem = (array: []) => {
       return array[randomIndex(array)];
     }
 
-    const shuffleArray = (arr) => {
+    const shuffleArray = (arr: []) => {
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
       }
     }
 
-    const getRandomAnswers = (array, solution, possibleAnswer = 3) => {
-      const answers = [solution];
+    const getRandomAnswers = (array: [], solution: string, possibleAnswer: number = 3) => {
+      const answers: string[] = [solution];
       possibleAnswer--;
       //Get random answers
       for (let i = 0; i < possibleAnswer; i++) {
@@ -125,7 +121,7 @@ export default{
         while (answers.includes(item))
         answers.push(item);
       }
-      shuffleArray(answers);
+      //shuffleArray(answers);
       return answers;
     }
 
@@ -145,7 +141,7 @@ export default{
       isSymbolDisplay
     }
   }
-}
+})
 </script>
 
 <style>
@@ -155,6 +151,5 @@ export default{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
