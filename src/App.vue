@@ -7,13 +7,7 @@
       <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
         <v-row class="fill-height">
           <v-col :style="'border: solid grey 1px;'" cols="1.5">
-            <AlphabetOptionsTab :versionName="'hiraganaModel'"
-              :version-options="versionOptions"
-              :type-options="typeOptions"
-              :selected-types-options="hiraganaModel.selectedTypes"
-              @update:selectedTypes="updateSelectedTypes"/>
-            <AlphabetOptionsTab :versionName="'katakanaModel'" :versionOptions="versionOptions"
-              :typeOptions="typeOptions" />
+            <AlphabetOptionsTab v-for="a in alphabets" :alphabet="a" :key="a" :value="a"/>
           </v-col>
           <v-col :style="'border: solid grey 1px;'" cols="9">
             <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
@@ -31,9 +25,9 @@
                 </v-container>
             </v-container>
           </v-col>
-          <v-col :style="'border: solid grey 1px;'" cols="1.5">
-            <p>Versions : {{ hiraganaModel.selectedVersions }}</p>
-            <p>Types : {{ hiraganaModel.selectedTypes }}</p>
+          <v-col v-for="a in alphabets" :key="a" :value="a" :style="'border: solid grey 1px;'" cols="1.5">
+            <p>Versions : {{ a.selectedVersions }}</p>
+            <p>Types : {{ a.selectedTypes }}</p>
           </v-col>
         </v-row>
       </v-container>
@@ -60,45 +54,17 @@
 
 <script>
 import { onMounted } from 'vue'
-import { useStore } from '@/store'
+import { alphabets } from '@/models/alphabet.ts'
 import KanaItem from './components/KanaItem.vue'
 import AlphabetOptionsTab from '@/components/AlphabetOptionsTab.vue'
-import { storeToRefs } from 'pinia';
 
 export default {
   name: 'App',
   components: {
     KanaItem,
     AlphabetOptionsTab
-  },
+},
   setup() {
-
-    const store = useStore();
-    const { katakanaModel, hiraganaModel } = storeToRefs(store);
-
-    const versionOptions = {
-      title: "Versions",
-      options: [
-        { name: 'Handakuten', type: 'handakuon' },
-        { name: 'Dakuten', type: 'dakuon' },
-        { name: 'Gojūon', type: 'gojuuon' },
-        { name: 'Yōon', type: 'youon' }
-      ]
-    }
-
-    const typeOptions = {
-      title: "Types",
-      options: [
-        { name: "Symbole", type: 'kana' },
-        { name: "Roumaji", type: 'roumaji' }
-      ]
-    }
-
-    const updateSelectedTypes = (selectedTypes) => {
-      console.log("updateSelectedTypes", selectedTypes);
-      hiraganaModel.selectedTypes = selectedTypes;
-      console.log("updateSelectedTypes", hiraganaModel.selectedTypes);
-    }
 
     //var isSymbol = true;
 
@@ -168,20 +134,15 @@ export default {
       //selectedOptions.value = [optionsMap[0].type];
       //selectedTypeGuess.value = [typeGuessMap[0].type];
       //getGuesses();
-      console.log(hiraganaModel);
     })
 
-    return {store,
-      versionOptions,
-      typeOptions,
+    return {
+      alphabets,
       getRandomAnswers,
       getRandomItem,
       randomIndex,
       shuffleArray,
-      isSymbolDisplay,
-      katakanaModel,
-      hiraganaModel,
-      updateSelectedTypes
+      isSymbolDisplay
     }
   }
 }

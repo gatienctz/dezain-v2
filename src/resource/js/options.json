@@ -1,0 +1,19 @@
+{
+    "versions": {
+        [
+            { "name": "Handakuten", "type": "handakuon" },
+            { "name": "Dakuten", "type": "dakuon" },
+            { "name": "Gojūon", "type": "gojuuon" },
+            { "name": "Yōon", "type": "youon" }
+        ]
+    }
+  ,
+    "types": {
+        [
+            { "name": "Symbole", "type": "kana" },
+            { "name": "Roumaji", "type": "roumaji" }
+        ] 
+    }
+}
+
+

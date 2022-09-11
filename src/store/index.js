@@ -1,27 +1,12 @@
-import { defineStore } from 'pinia'
-// You can name the return value of `defineStore()` anything you want, but it's best to use the name of the store and surround it with `use` and `Store` (e.g. `useUserStore`, `useCartStore`, `useProductStore`)
-// the first argument is a unique id of the store across your application
-export const useStore = defineStore('main', {
-  state: () => ({
-    katakanaModel: {
-      name: "Katakana",
-      selectedVersions: [],
-      selectedTypes: [],
-      json: require('@/resource/js/katakana.json'),
-      scoreboard: {
-        rightAnswers: 0,
-        wrongAnswers: 0
-      }
-    },
-    hiraganaModel: {
-      name: "Hiragana",
-      selectedVersions: [],
-      selectedTypes: [],
-      json: require('@/resource/js/hiragana.json'),
-      scoreboard: {
-        rightAnswers: 0,
-        wrongAnswers: 0
-      }
-    }
-  })
-})
+import { ref } from 'vue'
+import { Alphabet } from '@/models/alphabet'
+
+const alphabets = ref([])
+console.debug('Loading alphabets...')
+alphabets.value.push(new Alphabet("hiragana", require('@/resource/js/hiragana.json')));
+alphabets.value.push(new Alphabet("katakana", require('@/resource/js/katakana.json')));
+console.debug('Alphabets loaded.')
+
+export function useAlphabets() {
+  return alphabets
+}
