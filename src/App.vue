@@ -5,7 +5,7 @@
       <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
         <v-row class="fill-height">
           <v-col :style="'border: solid grey 1px;'" cols="1.5">
-            <AlphabetOptionsTab v-for="a in alphabets" v-model:selected-types="a.selectedTypes" v-model:selected-versions="a.selectedVersions" :key="a.name" :value="a" />
+            <AlphabetOptionsTab v-for="a in alphabets" :key="a.name" :value="a" />
           </v-col>
           <v-col :style="'border: solid grey 1px;'" cols="9">
             <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
@@ -28,6 +28,11 @@
             <p>Types : {{ a.selectedTypes }}</p>
           </v-col>
         </v-row>
+        <v-overlay contained :model-value="!gameStarted" class="justify-center align-center">
+            <v-btn color="success" @click="launchGame">
+            Commencer la partie !
+          </v-btn>
+        </v-overlay>
       </v-container>
       <!--<v-container>
         <v-spacer>Symbole à trouver</v-spacer>
@@ -43,13 +48,14 @@
           </v-col>
         </v-row>
       </v-container>-->
+      
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
   
-import { defineComponent, onMounted } from 'vue'
+import { defineComponent, onMounted, Ref, ref } from 'vue'
 import { useAlphabets } from '@/store'
 import KanaItem from '@/components/KanaItem.vue'
 import AlphabetOptionsTab from '@/components/AlphabetOptionsTab.vue'
@@ -62,6 +68,7 @@ export default defineComponent({
 },
   setup() {
     const alphabets = useAlphabets();
+    const gameStarted: Ref<boolean> = ref(false);
     //var isSymbol = true;
 
 
@@ -89,6 +96,10 @@ export default defineComponent({
       retAlphabet = selectedAlphabet[randomIndex(selectedAlphabet)];
       return retAlphabet.filter(item => selectedOptions.includes(item.type));
     }*/
+
+    const launchGame = () => {
+      gameStarted.value = true;
+    }
 
     const isSymbolDisplay = (types: []) => {
       return types[randomIndex(types)] === 'kana';
@@ -130,6 +141,7 @@ export default defineComponent({
       //selectedOptions.value = [optionsMap[0].type];
       //selectedTypeGuess.value = [typeGuessMap[0].type];
       //getGuesses();
+      gameStarted.value = false;
     })
 
     return {
@@ -138,7 +150,9 @@ export default defineComponent({
       getRandomItem,
       randomIndex,
       shuffleArray,
-      isSymbolDisplay
+      isSymbolDisplay,
+      gameStarted,
+      launchGame
     }
   }
 })
