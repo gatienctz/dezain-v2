@@ -3,7 +3,8 @@
         <v-list>
             <v-list-group>
                 <template v-slot:activator="{ props }">
-                    <v-list-item class="pa-0" v-bind="props" :title="alphabet.name.value" :append-icon="'null'" :preppend-icon="'null'" @click="openOptions"></v-list-item>
+                    <v-list-item class="pa-0" v-bind="props" :title="alphabet.name.value" :append-icon="'null'"
+                        :preppend-icon="'null'" @click="openOptions"></v-list-item>
                 </template>
 
                 <v-list nav density="compact" :lines="false" class="pa-0" mandatory :select-strategy="'multiple'"
@@ -25,18 +26,20 @@
             </v-list-group>
         </v-list>
     </v-container>
+    <v-col :style="'border: solid grey 1px;'" cols="1.5">
+        <p>Versions : {{ alphabet.selectedVersions }}</p>
+        <p>Types : {{ alphabet.selectedTypes }}</p>
+    </v-col>
 </template>
 
 <script lang="ts">
 
 import { onMounted, defineComponent, toRefs, PropType, ToRefs } from 'vue'
-import type { Alphabet } from '@/models/alphabet'
-import { Option } from '@/models/option'
+import type { Alphabet } from '@/models/Alphabet'
+import type { Option } from '@/models/Option'
 
 export default defineComponent({
     props: {
-        // selectedVersions: {type: Array as PropType<string[]>, default: () => []},
-        // selectedTypes: {type: Array as PropType<string[]>, default: () => []},
         value: { type: Object as PropType<Alphabet>, required: true }
     },
     emits: ["update:value"],
@@ -101,7 +104,7 @@ export default defineComponent({
 </script>
 
 <style>
-.v-list-item__append{
+.v-list-item__append {
     display: none !important;
 }
 </style>

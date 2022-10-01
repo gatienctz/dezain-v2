@@ -1,13 +1,41 @@
-import { ref } from 'vue'
-import type { Ref } from 'vue'
-import { Alphabet } from '@/models/alphabet'
+import { reactive, ref } from 'vue'
+import { Alphabet } from '@/models/Alphabet'
+import { AlphabetType } from '@/models/AlphabetType'
+import { Game } from '@/models/Game'
 
-const alphabets: Ref<Alphabet[]> = ref([])
-console.debug('Loading alphabets...')
-alphabets.value.push(new Alphabet("hiragana", require('@/resource/js/hiragana.json')));
-alphabets.value.push(new Alphabet("katakana", require('@/resource/js/katakana.json')));
-console.debug('Alphabets loaded.')
+const initKatakana = (alphabets: Alphabet[]) => {
+  alphabets.push(new Alphabet("katakana", require('@/resource/js/katakana.json')));
+}
 
-export function useAlphabets() {
-  return alphabets
+const initHiragana = (alphabets: Alphabet[]) => {
+  alphabets.push(new Alphabet("hiragana", require('@/resource/js/hiragana.json')));
+}
+
+const initAlphabets = (alphabetType: AlphabetType) => {
+  const alphabets: Alphabet[] = [];
+  switch (alphabetType) {
+    case AlphabetType.Hiragana: {
+      initHiragana(alphabets);
+    }
+      break;
+    case AlphabetType.Katakana: {
+      initKatakana(alphabets);
+    }
+      break;
+    case AlphabetType.Both: {
+      initHiragana(alphabets);
+      initKatakana(alphabets);
+    }
+      break;
+  }
+  return alphabets;
+}
+
+const createGame = (alphabetType: AlphabetType) => {
+  const alphabets: Alphabet[] = initAlphabets(alphabetType);
+  return reactive(new Game(alphabetType, alphabets));
+}
+
+export function useGame(alphabetType: AlphabetType) {
+  return createGame(alphabetType);
 }

@@ -1,4 +1,4 @@
-import { Letter } from '@/models/letter';
+import { Letter } from '@/models/Letter';
 
 export class Alphabet {
 
@@ -15,4 +15,3 @@ export class Alphabet {
         this.letters = letters;
     }
 }
-

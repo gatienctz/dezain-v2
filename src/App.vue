@@ -2,38 +2,7 @@
   <v-app>
     <v-navigation-drawer :style="'border: solid grey 1px;'" location="left" rail/>
     <v-main class="fill-height">
-      <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
-        <v-row class="fill-height">
-          <v-col :style="'border: solid grey 1px;'" cols="1.5">
-            <AlphabetOptionsTab v-for="a in alphabets" :key="a.name" :value="a" />
-          </v-col>
-          <v-col :style="'border: solid grey 1px; position: relative;'" cols="9">
-            <v-container :style="'border: solid grey 1px;'" class="pa-1 fill-height" fluid>
-              <v-container :style="'border: solid grey 1px;'" class="pa-1 align-self-start h-50">
-                <v-row class="justify-center pa-2 ma-0">
-                  <KanaItem :value="'い'"></KanaItem>
-                </v-row>
-              </v-container>
-              <v-container :style="'border: solid grey 1px;'" class="pa-1 align-self-end h-50">
-                <v-row class="justify-center pa-2 ma-0">
-                  <KanaItem :value="'い'"></KanaItem>
-                  <KanaItem :value="'え'"></KanaItem>
-                  <KanaItem :value="'て'"></KanaItem>
-                </v-row>
-              </v-container>
-            </v-container>
-            <v-overlay contained :model-value="!gameStarted" class="justify-center align-center">
-                <v-btn color="success" @click="launchGame">
-                Commencer la partie !
-              </v-btn>
-            </v-overlay>
-          </v-col>
-          <v-col v-for="a in alphabets" :key="a.name" :value="a" :style="'border: solid grey 1px;'" cols="1.5">
-            <p>Versions : {{ a.selectedVersions }}</p>
-            <p>Types : {{ a.selectedTypes }}</p>
-          </v-col>
-        </v-row>
-      </v-container>
+      <GameBoard :alphabet-type="alphabetType" :game-mode="gameMode"></GameBoard>
       <!--<v-container>
         <v-spacer>Symbole à trouver</v-spacer>
         <v-row :align="center">
@@ -54,20 +23,19 @@
 
 <script lang="ts">
   
-import { defineComponent, onMounted, Ref, ref } from 'vue'
-import { useAlphabets } from '@/store'
-import KanaItem from '@/components/KanaItem.vue'
-import AlphabetOptionsTab from '@/components/AlphabetOptionsTab.vue'
+import { defineComponent, onMounted } from 'vue'
+import { AlphabetType } from './models/AlphabetType';
+import GameBoard from './components/GameBoard.vue';
+import { GameMode } from './models/GameMode';
 
 export default defineComponent({
   name: 'App',
   components: {
-    KanaItem,
-    AlphabetOptionsTab
+    GameBoard
 },
   setup() {
-    const alphabets = useAlphabets();
-    const gameStarted: Ref<boolean> = ref(false);
+    const alphabetType = AlphabetType.Hiragana;
+    const gameMode = GameMode.Tile;
     //var isSymbol = true;
 
 
@@ -95,10 +63,6 @@ export default defineComponent({
       retAlphabet = selectedAlphabet[randomIndex(selectedAlphabet)];
       return retAlphabet.filter(item => selectedOptions.includes(item.type));
     }*/
-
-    const launchGame = () => {
-      gameStarted.value = true;
-    }
 
     const isSymbolDisplay = (types: []) => {
       return types[randomIndex(types)] === 'kana';
@@ -140,18 +104,16 @@ export default defineComponent({
       //selectedOptions.value = [optionsMap[0].type];
       //selectedTypeGuess.value = [typeGuessMap[0].type];
       //getGuesses();
-      gameStarted.value = false;
     })
 
     return {
-      alphabets,
+      alphabetType,
+      gameMode,
       getRandomAnswers,
       getRandomItem,
       randomIndex,
       shuffleArray,
-      isSymbolDisplay,
-      gameStarted,
-      launchGame
+      isSymbolDisplay
     }
   }
 })
