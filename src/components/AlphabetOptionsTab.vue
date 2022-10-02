@@ -4,7 +4,7 @@
             <v-list-group>
                 <template v-slot:activator="{ props }">
                     <v-list-item class="pa-0" v-bind="props" :title="alphabet.name.value" :append-icon="'null'"
-                        :preppend-icon="'null'" @click="openOptions"></v-list-item>
+                        :preppend-icon="'null'" ></v-list-item>
                 </template>
 
                 <v-list nav density="compact" :lines="false" class="pa-0" mandatory :select-strategy="'multiple'"
@@ -15,16 +15,16 @@
                         <v-list-item-title start>{{ v.name }}</v-list-item-title>
                     </v-list-item>
                 </v-list>
-                <v-list nav density="compact" :lines="false" class="pa-0" mandatory :select-strategy="'multiple'"
-                    :selected="alphabet.selectedTypes.value">
-                    <v-list-subheader>Types</v-list-subheader>
-                    <v-list-item v-for="t in types" :key="t.code" :value="t.code" :active="isActiveType(t.code)"
-                        @click="toggleOptionType(t.code)">
-                        <v-list-item-title start>{{ t.name }}</v-list-item-title>
-                    </v-list-item>
-                </v-list>
             </v-list-group>
         </v-list>
+        <v-list nav density="compact" :lines="false" class="pa-0" mandatory :select-strategy="'multiple'"
+                :selected="selectedTypes">
+                <v-list-subheader>Types</v-list-subheader>
+                <v-list-item v-for="t in types" :key="t.code" :value="t.code" :active="isActiveType(t.code)"
+                    @click="toggleOptionType(t.code)">
+                    <v-list-item-title start>{{ t.name }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
     </v-container>
     <v-col :style="'border: solid grey 1px;'" cols="1.5">
         <p>Versions : {{ alphabet.selectedVersions }}</p>
@@ -40,9 +40,10 @@ import type { Option } from '@/models/Option'
 
 export default defineComponent({
     props: {
-        value: { type: Object as PropType<Alphabet>, required: true }
+        value: { type: Object as PropType<Alphabet>, required: true },
+        selectedTypes: { type: Object as PropType<Array<string>>, required: true }
     },
-    emits: ["update:value"],
+    emits: ["update:value", "update:selectedTypes"],
     setup(props, { emit }) {
 
         const options: Option[] = require('@/resource/js/options.json');
@@ -67,25 +68,19 @@ export default defineComponent({
         };
 
         const toggleOptionType = (type: string) => {
-            if (alphabet.selectedTypes.value.includes(type)) {
-                if (alphabet.selectedTypes.value.length !== 1)
-                    alphabet.selectedTypes.value = alphabet.selectedTypes.value.filter((t: string) => t !== type);
+            if (props.selectedTypes.includes(type)) {
+                if (props.selectedTypes.length !== 1)
+                    emit('update:selectedTypes', props.selectedTypes.filter((t: string) => t !== type));
             }
             else {
-                alphabet.selectedTypes.value = [...alphabet.selectedTypes.value, type];
+                emit('update:selectedTypes', [...props.selectedTypes, type]);
             }
-            emit('update:value', alphabet);
-        }
-
-        const openOptions = (event: Event) => {
-            console.log("Options opened ");
-            console.log(event.target);
         }
 
         onMounted(() => {
             alphabet.selectedVersions.value = ["handakuon"];
-            alphabet.selectedTypes.value = ["kana"];
             emit('update:value', alphabet);
+            emit('update:selectedTypes', ["kana"]);
         });
 
         return {
@@ -96,9 +91,8 @@ export default defineComponent({
             isActiveVersion,
             isActiveType,
             toggleOptionVersion,
-            toggleOptionType,
-            openOptions
-        };
+            toggleOptionType
+                };
     }
 })
 </script>

@@ -1,29 +1,30 @@
 <template>
   <v-app>
-    <v-navigation-drawer :style="'border: solid grey 1px;'" location="left" rail/>
+    <v-navigation-drawer :style="'border: solid grey 1px;'" location="left" rail expand-on-hover>
+      <v-list-group :value="GameMode.Tile">
+        <v-list nav>
+          <v-list-item :value="AlphabetType.Katakana" @click="startGame(GameMode.Tile, AlphabetType.Katakana)"/>
+          <v-list-item :value="AlphabetType.Hiragana" @click="startGame(GameMode.Tile, AlphabetType.Hiragana)"/>
+          <v-list-item :value="AlphabetType.Both" @click="startGame(GameMode.Tile, AlphabetType.Both)"/>
+        </v-list>
+      </v-list-group>
+      <v-list-group :value="GameMode.Keyboard">
+        <v-list nav>
+          <v-list-item :title="AlphabetType.Katakana" :value="AlphabetType.Katakana" @click="startGame(GameMode.Keyboard, AlphabetType.Katakana)"/>
+          <v-list-item :title="AlphabetType.Hiragana" :value="AlphabetType.Hiragana" @click="startGame(GameMode.Keyboard, AlphabetType.Hiragana)"/>
+          <v-list-item :title="AlphabetType.Both" :value="AlphabetType.Both" @click="startGame(GameMode.Keyboard, AlphabetType.Both)"/>
+        </v-list>
+      </v-list-group>
+    </v-navigation-drawer>
     <v-main class="fill-height">
-      <GameBoard :alphabet-type="alphabetType" :game-mode="gameMode"></GameBoard>
-      <!--<v-container>
-        <v-spacer>Symbole à trouver</v-spacer>
-        <v-row :align="center">
-          <v-col>
-            <KanaItem v-if="solution" :isSymbol="solution.displayType" :item="solution"></KanaItem>
-          </v-col>
-        </v-row>
-        <v-spacer>Choix</v-spacer>
-        <v-row :align="center">
-          <v-col v-for="guess in guesses" :key="guess.roumaji">
-            <KanaItem v-if="solution" :item="guess" :isSymbol="!solution.displayType"></KanaItem>
-          </v-col>
-        </v-row>
-      </v-container>-->
+      <GameBoard v-if="gameInitied" :init-game="gameInitied" :alphabet-type="alphabetType" :game-mode="gameMode"></GameBoard>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
   
-import { defineComponent, onMounted } from 'vue'
+import { defineComponent, Ref, ref } from 'vue'
 import { AlphabetType } from './models/AlphabetType';
 import GameBoard from './components/GameBoard.vue';
 import { GameMode } from './models/GameMode';
@@ -34,86 +35,23 @@ export default defineComponent({
     GameBoard
 },
   setup() {
-    const alphabetType = AlphabetType.Hiragana;
-    const gameMode = GameMode.Tile;
-    //var isSymbol = true;
+    const alphabetType: Ref<AlphabetType> = ref(AlphabetType.Katakana);
+    const gameMode: Ref<GameMode> = ref(GameMode.Tile);
+    const gameInitied = ref(true);
 
-
-    //TODO Do Computed object for Total & pourcent for each entry of scoreboardModel 
-
-    /*const verifyAnswer = (item) => {
-      item.roumaji === solution.value.roumaji ? rightAnswer++ : wrongAnswer++;
-    }*/
-    /*
-    const getGuesses = () => {
-
-      alphabet = setupAlphabet(selectedAlphabet.value, selectedOptions.value);
-
-      solution.value = getRandomItem(alphabet);
-
-      guesses.value = getRandomAnswers(alphabet, solution.value, 5);
-
-      isSymbol = isSymbolDisplay(selectedTypeGuess.value);
-
-      solution.value.displayType = isSymbol;
+    const startGame = (mode: GameMode, type: AlphabetType) => {
+      gameInitied.value = true;
+      gameMode.value = mode;
+      alphabetType.value = type;
     }
-
-    const setupAlphabet = (selectedAlphabet, selectedOptions) => {
-      var retAlphabet = null;
-      retAlphabet = selectedAlphabet[randomIndex(selectedAlphabet)];
-      return retAlphabet.filter(item => selectedOptions.includes(item.type));
-    }*/
-
-    const isSymbolDisplay = (types: []) => {
-      return types[randomIndex(types)] === 'kana';
-    }
-
-    const randomIndex = (array: []) => {
-      return Math.floor(Math.random() * array.length);
-    }
-
-    const getRandomItem = (array: []) => {
-      return array[randomIndex(array)];
-    }
-
-    const shuffleArray = (arr: []) => {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-    }
-
-    const getRandomAnswers = (array: [], solution: string, possibleAnswer: number = 3) => {
-      const answers: string[] = [solution];
-      possibleAnswer--;
-      //Get random answers
-      for (let i = 0; i < possibleAnswer; i++) {
-        var item;
-        do {
-          item = getRandomItem(array);
-        }
-        while (answers.includes(item))
-        answers.push(item);
-      }
-      //shuffleArray(answers);
-      return answers;
-    }
-
-    onMounted(() => {
-      //selectedAlphabet.value = [alphabetsMap[0].alphabet];
-      //selectedOptions.value = [optionsMap[0].type];
-      //selectedTypeGuess.value = [typeGuessMap[0].type];
-      //getGuesses();
-    })
 
     return {
+      AlphabetType,
       alphabetType,
+      GameMode,
       gameMode,
-      getRandomAnswers,
-      getRandomItem,
-      randomIndex,
-      shuffleArray,
-      isSymbolDisplay
+      gameInitied,
+      startGame
     }
   }
 })

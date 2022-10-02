@@ -1,4 +1,4 @@
 export enum GameMode {
-    Tile,
-    Keyboard
+    Tile = "Tuile",
+    Keyboard = "Clavier"
 }
