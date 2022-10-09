@@ -1,56 +1,80 @@
 <template>
   <v-app>
     <v-navigation-drawer :style="'border: solid grey 1px;'" location="left" rail expand-on-hover>
-      <v-list-group :value="GameMode.Tile">
-        <v-list nav>
-          <v-list-item :value="AlphabetType.Katakana" @click="startGame(GameMode.Tile, AlphabetType.Katakana)"/>
-          <v-list-item :value="AlphabetType.Hiragana" @click="startGame(GameMode.Tile, AlphabetType.Hiragana)"/>
-          <v-list-item :value="AlphabetType.Both" @click="startGame(GameMode.Tile, AlphabetType.Both)"/>
-        </v-list>
-      </v-list-group>
-      <v-list-group :value="GameMode.Keyboard">
-        <v-list nav>
-          <v-list-item :title="AlphabetType.Katakana" :value="AlphabetType.Katakana" @click="startGame(GameMode.Keyboard, AlphabetType.Katakana)"/>
-          <v-list-item :title="AlphabetType.Hiragana" :value="AlphabetType.Hiragana" @click="startGame(GameMode.Keyboard, AlphabetType.Hiragana)"/>
-          <v-list-item :title="AlphabetType.Both" :value="AlphabetType.Both" @click="startGame(GameMode.Keyboard, AlphabetType.Both)"/>
-        </v-list>
-      </v-list-group>
+      <v-list>
+        <v-list-group :value="GameMode.Tile">
+          <template v-slot:activator="{ props }">
+            <v-list-item v-bind="props" prepend-icon="mdi-account-circle" :title="GameMode.Tile"></v-list-item>
+          </template>
+          <v-list nav density="compact" :lines="false" class="pa-0" mandatory>
+            <v-list-item :value="AlphabetType.Katakana" :title="AlphabetType.Katakana"
+              @click="startGame()" />
+            <v-list-item :value="AlphabetType.Hiragana" :title="AlphabetType.Hiragana"
+              @click="startGame()" />
+            <v-list-item :value="AlphabetType.Both" :title="AlphabetType.Both"
+              @click="startGame()" />
+          </v-list>
+        </v-list-group>
+        <v-list-group :value="GameMode.Keyboard">
+          <template v-slot:activator="{ props }">
+            <v-list-item v-bind="props" prepend-icon="mdi-account-circle" :title="GameMode.Keyboard"></v-list-item>
+          </template>
+          <v-list nav density="compact" :lines="false" class="pa-0" mandatory>
+            <v-list-item :title="AlphabetType.Katakana" :value="AlphabetType.Katakana"
+              @click="startGame()" />
+            <v-list-item :title="AlphabetType.Hiragana" :value="AlphabetType.Hiragana"
+              @click="startGame()" />
+            <v-list-item :title="AlphabetType.Both" :value="AlphabetType.Both"
+              @click="startGame()" />
+          </v-list>
+        </v-list-group>
+      </v-list>
+      <v-col :style="'border: solid grey 1px;'" cols="1.5">
+        <p>Versions : {{ selectedAlphabetType }}</p>
+        <p>Types : {{ selectedGameMode }}</p>
+    </v-col>
     </v-navigation-drawer>
     <v-main class="fill-height">
-      <GameBoard v-if="gameInitied" :init-game="gameInitied" :alphabet-type="alphabetType" :game-mode="gameMode"></GameBoard>
+      <GameBoard v-if="gameInitied" :init-game="gameInitied" :alphabet-type="alphabetType" :game-mode="gameMode">
+      </GameBoard>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
-  
-import { defineComponent, Ref, ref } from 'vue'
-import { AlphabetType } from './models/AlphabetType';
+
+import { defineComponent, Ref, ref } from 'vue';
 import GameBoard from './components/GameBoard.vue';
+import { AlphabetType } from './models/AlphabetType';
 import { GameMode } from './models/GameMode';
 
 export default defineComponent({
   name: 'App',
   components: {
     GameBoard
-},
+  },
   setup() {
-    const alphabetType: Ref<AlphabetType> = ref(AlphabetType.Katakana);
-    const gameMode: Ref<GameMode> = ref(GameMode.Tile);
-    const gameInitied = ref(true);
+    const gameInitied: Ref<boolean> = ref(false);
+    const selectedAlphabetType: Ref<AlphabetType[]> = ref([]);
+    const selectedGameMode: Ref<GameMode[]> = ref([]);
+    const alphabetType = ref("");
+    const gameMode = ref("");
 
-    const startGame = (mode: GameMode, type: AlphabetType) => {
+    const startGame = () => {
+      console.log("Game started !");
       gameInitied.value = true;
-      gameMode.value = mode;
-      alphabetType.value = type;
+      alphabetType.value = selectedAlphabetType?.value[0];
+      gameMode.value = selectedGameMode?.value[0];
     }
 
     return {
       AlphabetType,
       alphabetType,
-      GameMode,
       gameMode,
+      GameMode,
       gameInitied,
+      selectedAlphabetType,
+      selectedGameMode,
       startGame
     }
   }

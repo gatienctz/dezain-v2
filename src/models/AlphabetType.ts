@@ -1,5 +1,5 @@
 export enum AlphabetType {
-    Katakana,
-    Hiragana,
-    Both
+    Katakana = "Katakana",
+    Hiragana = "Hiragana",
+    Both = "Both"
 }

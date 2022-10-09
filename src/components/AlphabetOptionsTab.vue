@@ -28,7 +28,7 @@
     </v-container>
     <v-col :style="'border: solid grey 1px;'" cols="1.5">
         <p>Versions : {{ alphabet.selectedVersions }}</p>
-        <p>Types : {{ alphabet.selectedTypes }}</p>
+        <p>Types : {{ selectedTypes }}</p>
     </v-col>
 </template>
 
