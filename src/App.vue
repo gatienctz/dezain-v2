@@ -2,6 +2,7 @@
   <v-app>
     <v-navigation-drawer :style="'border: solid grey 1px;'" location="left" rail expand-on-hover>
       <v-list>
+        <v-list-item prepend-icon="mdi-home" title="Home" @click="goTo('Home')"></v-list-item>
         <v-list-group :value="GameMode.Tile">
           <template v-slot:activator="{ props }">
             <v-list-item v-bind="props" prepend-icon="mdi-account-circle" :title="GameMode.Tile"></v-list-item>
@@ -30,8 +31,8 @@
         </v-list-group>
       </v-list>
       <v-col :style="'border: solid grey 1px;'" cols="1.5">
-        <p>Versions : {{ selectedAlphabetType }}</p>
-        <p>Types : {{ selectedGameMode }}</p>
+        <p>Type : {{ selectedAlphabetType }}</p>
+        <p>Mode : {{ selectedGameMode }}</p>
     </v-col>
     </v-navigation-drawer>
     <v-main class="fill-height">
@@ -67,6 +68,18 @@ export default defineComponent({
       gameMode.value = selectedGameMode?.value[0];
     }
 
+    const goTo = (page: String) => {
+      console.log("Go to " + page);
+      if(gameInitied.value){
+        if(confirm("Une partie est en cours, êtes-vous sûr de quitter cette page ?")){
+          console.log("Ok, leave current page");
+        }
+        else {
+          console.log("Stay on current page");
+        }
+      }
+    }
+
     return {
       AlphabetType,
       alphabetType,
@@ -75,7 +88,8 @@ export default defineComponent({
       gameInitied,
       selectedAlphabetType,
       selectedGameMode,
-      startGame
+      startGame,
+      goTo
     }
   }
 })
